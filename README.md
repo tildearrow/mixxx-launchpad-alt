@@ -2,6 +2,8 @@
 
 **insert build not needed logo here**
 
+NOTE: this mapping is incomplete. please avoid use in production yet. thank you.
+
 there is already [a Launchpad mapping](https://github.com/szdavid92/mixxx-launchpad) on GitHub and another that comes with Mixxx. however, I felt neither of these fit my use-cases:
 
 * the Mixxx built-in mapping:
