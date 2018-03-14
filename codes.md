@@ -41,7 +41,7 @@ EJECT | QUANTIZE | KEY LOCK | FX2
 
 ## mode 02
 REWIND | FAST-FORWARD | REVERSE | CENSOR
-STUTTER|       x      |    x    |   x
+STUTTER|   OUT LEFT   | OUT CEN | OUT RIGHT
 
 ## mode 03
 

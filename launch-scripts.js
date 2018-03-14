@@ -7,6 +7,24 @@ NL2.chan={
   "[Channel3]": 2,
   "[Channel4]": 3,
 };
+NL2.sample={
+  "[Sampler1]": 0,
+  "[Sampler2]": 1,
+  "[Sampler3]": 2,
+  "[Sampler4]": 3,
+  "[Sampler5]": 4,
+  "[Sampler6]": 5,
+  "[Sampler7]": 6,
+  "[Sampler8]": 7,
+  "[Sampler9]": 0,
+  "[Sampler10]": 1,
+  "[Sampler11]": 2,
+  "[Sampler12]": 3,
+  "[Sampler13]": 4,
+  "[Sampler14]": 5,
+  "[Sampler15]": 6,
+  "[Sampler16]": 7
+};
 NL2.hotCueCtrls={
   "hotcue_1_enabled": 0,
   "hotcue_2_enabled": 1,
@@ -28,6 +46,7 @@ NL2.padCMap={
   44: 7, 64: 7, 48: 7, 68: 7
 };
 NL2.crossValues=[-1,-0.67,-0.33,0,0.33,0.67,1];
+NL2.shift=false;
 NL2.modeChan=0;
 NL2.modePrompt=0;
 NL2.modeHighHN=0;
@@ -54,6 +73,10 @@ NL2.page0Controls=[
   "keylock",
   null
 ];
+NL2.page0Hold=[
+  true, true, false, true,
+  false, true, true, true
+];
 NL2.loopSizes=['0.03125','0.0625','0.125','0.25','0.5','1','2','4','8','16','32','64'];
 NL2.beatJumpSizes=[-0.25,-0.5,-1,-2,0.25,0.5,1,2];
 NL2.hotCueColors=[5,13,45,17,87,49,37,81];
@@ -77,6 +100,21 @@ NL2.connectControls=function() {
     conn=engine.makeConnection("[Channel"+(i+1)+"]","slip_enabled",NL2.lightSlip);
     conn.trigger();
     conn=engine.makeConnection("[Channel"+(i+1)+"]","beat_active",NL2.lightSyncBeat);
+    conn.trigger();
+  }
+  
+  // sample conns
+  for (i=0; i<8; i++) {
+    conn=engine.makeConnection("[Sampler"+(i+1)+"]","play",NL2.lightSample);
+    conn.trigger();
+    conn=engine.makeConnection("[Sampler"+(i+1)+"]","track_loaded",NL2.lightInsSample);
+    conn.trigger();
+  }
+  
+  for (i=0; i<8; i++) {
+    conn=engine.makeConnection("[Sampler"+(i+9)+"]","play",NL2.lightSample2);
+    conn.trigger();
+    conn=engine.makeConnection("[Sampler"+(i+9)+"]","track_loaded",NL2.lightInsSample2);
     conn.trigger();
   }
   
@@ -129,6 +167,14 @@ NL2.padConns=function(channel) {
         NL2.modeConns[channel][i].trigger();
       }
       break;
+    case 12:
+      for (i=0; i<8; i++) {
+        midi.sendShortMsg(0x90,NL2.padLights[channel][i],(engine.getValue("[Sampler"+(i+1)+"]","track_loaded")==true)?112:0);
+      }
+    case 13:
+      for (i=0; i<8; i++) {
+        midi.sendShortMsg(0x90,NL2.padLights[channel][i],(engine.getValue("[Sampler"+(i+9)+"]","track_loaded")==true)?112:0);
+      }
   }
 }
 
@@ -145,7 +191,7 @@ NL2.lightSlip=function(value,group,control) {
 }
 
 NL2.lightSyncBeat=function(value,group,control) {
-  midi.sendShortMsg(0x90,0x16+NL2.chan[group]*2,value?38:0);
+  midi.sendShortMsg(0x90,0x16+NL2.chan[group]*2,value?38:(engine.getValue(group,"sync_enabled")?46:0));
 }
 
 NL2.lightPadHotCue=function(value,group,control) {
@@ -186,8 +232,40 @@ NL2.lightGeneric7=function(value,group,control) {
   midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][7],value?80:0);
 }
 
+NL2.lightSample=function(value,group,control) {
+  for (var i=0; i<4; i++) {
+    if (NL2.modes[i]==12) {
+      midi.sendShortMsg(0x90,NL2.padLights[i][NL2.sample[group]],value?(5+(Math.floor(Math.random()*7)*8)):112);
+    }
+  }
+}
+
+NL2.lightSample2=function(value,group,control) {
+  for (var i=0; i<4; i++) {
+    if (NL2.modes[i]==13) {
+      midi.sendShortMsg(0x90,NL2.padLights[i][NL2.sample[group]],value?(5+(Math.floor(Math.random()*7)*8)):112);
+    }
+  }
+}
+
+NL2.lightInsSample=function(value,group,control) {
+  for (var i=0; i<4; i++) {
+    if (NL2.modes[i]==12) {
+      midi.sendShortMsg(0x90,NL2.padLights[i][NL2.sample[group]],value?112:0);
+    }
+  }
+}
+
+NL2.lightInsSample2=function(value,group,control) {
+  for (var i=0; i<4; i++) {
+    if (NL2.modes[i]==13) {
+      midi.sendShortMsg(0x90,NL2.padLights[i][NL2.sample[group]],value?112:0);
+    }
+  }
+}
+
 NL2.lightCross=function(value,group,control) {
-  for (i=0; i<7; i++) {
+  for (var i=0; i<7; i++) {
     midi.sendShortMsg(0x90,0x52+i,(Math.floor(3.49*(value+1))==i)?33:47);
   }
 }
@@ -243,10 +321,20 @@ NL2.padPress=function(group,control,value,asdf,agroup) {
   switch (NL2.modes[NL2.chan[agroup]]) {
     case 0:
       // to be fixed for some buttons
-      engine.setValue(agroup,NL2.page0Controls[NL2.padCMap[control]],value?1:0);
+      if (NL2.page0Hold[NL2.padCMap[control]]) {
+        if (value) {
+          engine.setValue(agroup,NL2.page0Controls[NL2.padCMap[control]],!engine.getValue(agroup,NL2.page0Controls[NL2.padCMap[control]]));
+        }
+      } else {
+        engine.setValue(agroup,NL2.page0Controls[NL2.padCMap[control]],value?1:0);
+      }
       break;
     case 4:
-      engine.setValue(agroup,"hotcue_"+(NL2.padCMap[control]+1)+"_activate",value?1:0);
+      if (NL2.shift) {
+        engine.setValue(agroup,"hotcue_"+(NL2.padCMap[control]+1)+"_clear",value?1:0);
+      } else {
+        engine.setValue(agroup,"hotcue_"+(NL2.padCMap[control]+1)+"_activate",value?1:0);
+      }
       break;
     case 5:
       engine.setValue(agroup,"beatlooproll_"+NL2.loopSizes[NL2.padCMap[control]+1]+"_activate",value?1:0);
@@ -257,10 +345,42 @@ NL2.padPress=function(group,control,value,asdf,agroup) {
       }
       break;
     case 12:
-      engine.setValue("[Sampler"+(NL2.padCMap[control]+1)+"]","start_play",value?1:0);
+      if (NL2.shift) {
+        engine.setValue("[Sampler"+(NL2.padCMap[control]+1)+"]","start_stop",value?1:0);
+      } else {
+        engine.setValue("[Sampler"+(NL2.padCMap[control]+1)+"]","start_play",value?1:0);
+      }
       break;
     case 13:
-      engine.setValue("[Sampler"+(NL2.padCMap[control]+9)+"]","start_play",value?1:0);
+      if (NL2.shift) {
+        engine.setValue("[Sampler"+(NL2.padCMap[control]+9)+"]","start_stop",value?1:0);
+      } else {
+        engine.setValue("[Sampler"+(NL2.padCMap[control]+9)+"]","start_play",value?1:0);
+      }
       break;
+  }
+}
+
+NL2.shiftKey=function(group,control,value) {
+  if (value) {
+    NL2.shift=true;
+  } else {
+    NL2.shift=false;
+  }
+  midi.sendShortMsg(0x90,0x13,NL2.shift?5:0);
+}
+
+NL2.syncEnable=function(group,control,value,asdf,agroup) {
+  if (value) {
+    engine.setValue(agroup,"sync_enabled",!NL2.shift);
+  }
+  midi.sendShortMsg(0x90,control,engine.getValue(agroup,"sync_enabled")?46:0);
+}
+
+NL2.cueButton=function(group,control,value,asdf,agroup) {
+  if (NL2.shift) {
+    engine.setValue(agroup,"start",value);
+  } else {
+    engine.setValue(agroup,"cue_default",value);
   }
 }

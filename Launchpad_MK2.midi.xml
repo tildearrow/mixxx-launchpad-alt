@@ -1,20 +1,241 @@
 <?xml version='1.0' encoding='utf-8'?>
-<MixxxControllerPreset mixxxVersion="" schemaVersion="1">
+<MixxxControllerPreset schemaVersion="1" mixxxVersion="">
     <info>
         <name>Novation Launchpad MK2 (alternate)</name>
         <author>tildearrow</author>
-        <description>Alternate mapping for Launchpad MK2</description>
+        <description>Alternate mapping</description>
     </info>
     <controller id="Launchpad">
         <scriptfiles>
-            <file functionprefix="NL2" filename="launch-scripts.js"/>
+            <file filename="launch-scripts.js" functionprefix="NL2"/>
         </scriptfiles>
         <controls>
+            <control>
+                <group>[Channel3]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x29</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Master]</group>
+                <key>NL2.setMode</key>
+                <status>0xB0</status>
+                <midino>0x69</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x43</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
             <control>
                 <group>[Channel1]</group>
                 <key>NL2.padPress</key>
                 <status>0x90</status>
-                <midino>0x3D</midino>
+                <midino>0x3E</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>slip_enabled</key>
+                <description>MIDI Learned from 4 messages.</description>
+                <status>0x90</status>
+                <midino>0x17</midino>
+                <options>
+                    <switch/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel3]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x33</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel3]</group>
+                <key>slip_enabled</key>
+                <description>MIDI Learned from 10 messages.</description>
+                <status>0x90</status>
+                <midino>0x19</midino>
+                <options>
+                    <switch/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel3]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x35</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel4]</group>
+                <key>play</key>
+                <description>MIDI Learned from 24 messages.</description>
+                <status>0x90</status>
+                <midino>0x12</midino>
+                <options>
+                    <normal/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel4]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x2E</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x40</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Master]</group>
+                <key>NL2.setModeChan</key>
+                <status>0xB0</status>
+                <midino>0x6E</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x3F</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel4]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x30</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x4A</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel4]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x3A</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x4C</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Master]</group>
+                <key>NL2.shiftKey</key>
+                <status>0x90</status>
+                <midino>0x13</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel4]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x2F</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x41</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Master]</group>
+                <key>NL2.setModeChan</key>
+                <status>0xB0</status>
+                <midino>0x6F</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Master]</group>
+                <key>NL2.setCrossfader</key>
+                <status>0x90</status>
+                <midino>0x56</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>slip_enabled</key>
+                <description>MIDI Learned from 2 messages.</description>
+                <status>0x90</status>
+                <midino>0x15</midino>
+                <options>
+                    <switch/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>play</key>
+                <description>MIDI Learned from 14 messages.</description>
+                <status>0x90</status>
+                <midino>0x0E</midino>
+                <options>
+                    <normal/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x4B</midino>
                 <options>
                     <script-binding/>
                 </options>
@@ -38,13 +259,67 @@
                 </options>
             </control>
             <control>
-                <group>[Channel2]</group>
-                <key>play</key>
-                <description>MIDI Learned from 14 messages.</description>
+                <group>[Master]</group>
+                <key>NL2.setCrossfader</key>
                 <status>0x90</status>
-                <midino>0x0E</midino>
+                <midino>0x58</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x4D</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel3]</group>
+                <key>play</key>
+                <description>MIDI Learned from 22 messages.</description>
+                <status>0x90</status>
+                <midino>0x10</midino>
                 <options>
                     <normal/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel3]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x2C</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Master]</group>
+                <key>NL2.setModeChan</key>
+                <status>0xB0</status>
+                <midino>0x6C</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x3D</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel3]</group>
+                <key>NL2.syncEnable</key>
+                <status>0x90</status>
+                <midino>0x1A</midino>
+                <options>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -57,20 +332,84 @@
                 </options>
             </control>
             <control>
-                <group>[Channel4]</group>
-                <key>play</key>
-                <description>MIDI Learned from 24 messages.</description>
+                <group>[Channel3]</group>
+                <key>NL2.padPress</key>
                 <status>0x90</status>
-                <midino>0x12</midino>
+                <midino>0x36</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Channel1]</group>
                 <key>NL2.padPress</key>
                 <status>0x90</status>
-                <midino>0x49</midino>
+                <midino>0x48</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel3]</group>
+                <key>NL2.cueButton</key>
+                <description>MIDI Learned from 18 messages.</description>
+                <status>0x90</status>
+                <midino>0x0F</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel3]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x2B</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Master]</group>
+                <key>NL2.setMode</key>
+                <status>0xB0</status>
+                <midino>0x6B</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel4]</group>
+                <key>NL2.syncEnable</key>
+                <status>0x90</status>
+                <midino>0x1C</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel4]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x38</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel4]</group>
+                <key>NL2.cueButton</key>
+                <description>MIDI Learned from 20 messages.</description>
+                <status>0x90</status>
+                <midino>0x11</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Master]</group>
+                <key>NL2.setCrossfader</key>
+                <status>0x90</status>
+                <midino>0x52</midino>
                 <options>
                     <script-binding/>
                 </options>
@@ -95,330 +434,9 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>slip_enabled</key>
-                <description>MIDI Learned from 2 messages.</description>
-                <status>0x90</status>
-                <midino>0x15</midino>
-                <options>
-                    <switch/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel1]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x3E</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel1]</group>
                 <key>NL2.padPress</key>
                 <status>0x90</status>
                 <midino>0x47</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel3]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x2B</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Master]</group>
-                <key>NL2.setMode</key>
-                <status>0xB0</status>
-                <midino>0x6B</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel2]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x4C</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel3]</group>
-                <key>cue_default</key>
-                <description>MIDI Learned from 18 messages.</description>
-                <status>0x90</status>
-                <midino>0x0F</midino>
-                <options>
-                    <normal/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel3]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x34</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel1]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x4A</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel4]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x2E</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Master]</group>
-                <key>NL2.setModeChan</key>
-                <status>0xB0</status>
-                <midino>0x6E</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel1]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x3F</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel1]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x40</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel2]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x4D</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel3]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x35</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel3]</group>
-                <key>slip_enabled</key>
-                <description>MIDI Learned from 10 messages.</description>
-                <status>0x90</status>
-                <midino>0x19</midino>
-                <options>
-                    <switch/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel2]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x4B</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel4]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x2F</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel3]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x33</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Master]</group>
-                <key>NL2.setModeChan</key>
-                <status>0xB0</status>
-                <midino>0x6F</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Master]</group>
-                <key>NL2.setCrossfader</key>
-                <status>0x90</status>
-                <midino>0x54</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel2]</group>
-                <key>slip_enabled</key>
-                <description>MIDI Learned from 4 messages.</description>
-                <status>0x90</status>
-                <midino>0x17</midino>
-                <options>
-                    <switch/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel4]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x38</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel2]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x41</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel2]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x4E</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Master]</group>
-                <key>NL2.setCrossfader</key>
-                <status>0x90</status>
-                <midino>0x52</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel3]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x36</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel2]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x44</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Master]</group>
-                <key>NL2.setMode</key>
-                <status>0xB0</status>
-                <midino>0x68</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel1]</group>
-                <key>play</key>
-                <description>MIDI Learned from 8 messages.</description>
-                <status>0x90</status>
-                <midino>0x0C</midino>
-                <options>
-                    <normal/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel3]</group>
-                <key>play</key>
-                <description>MIDI Learned from 22 messages.</description>
-                <status>0x90</status>
-                <midino>0x10</midino>
-                <options>
-                    <normal/>
-                </options>
-            </control>
-            <control>
-                <group>[Master]</group>
-                <key>NL2.setCrossfader</key>
-                <status>0x90</status>
-                <midino>0x55</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel4]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x39</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel2]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x42</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Master]</group>
-                <key>NL2.setCrossfader</key>
-                <status>0x90</status>
-                <midino>0x53</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel4]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x37</midino>
                 <options>
                     <script-binding/>
                 </options>
@@ -437,16 +455,35 @@
                 <group>[Master]</group>
                 <key>NL2.setCrossfader</key>
                 <status>0x90</status>
-                <midino>0x58</midino>
+                <midino>0x54</midino>
                 <options>
                     <script-binding/>
                 </options>
             </control>
             <control>
-                <group>[Channel3]</group>
+                <group>[Channel4]</group>
                 <key>NL2.padPress</key>
                 <status>0x90</status>
-                <midino>0x29</midino>
+                <midino>0x37</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>play</key>
+                <description>MIDI Learned from 8 messages.</description>
+                <status>0x90</status>
+                <midino>0x0C</midino>
+                <options>
+                    <normal/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x49</midino>
                 <options>
                     <script-binding/>
                 </options>
@@ -455,45 +492,43 @@
                 <group>[Master]</group>
                 <key>NL2.setMode</key>
                 <status>0xB0</status>
-                <midino>0x69</midino>
+                <midino>0x68</midino>
                 <options>
                     <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>cue_default</key>
-                <description>MIDI Learned from 16 messages.</description>
+                <key>NL2.padPress</key>
                 <status>0x90</status>
-                <midino>0x0D</midino>
+                <midino>0x42</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel4]</group>
+                <key>NL2.padPress</key>
+                <status>0x90</status>
+                <midino>0x39</midino>
+                <options>
+                    <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Master]</group>
                 <key>NL2.setCrossfader</key>
                 <status>0x90</status>
-                <midino>0x56</midino>
+                <midino>0x53</midino>
                 <options>
                     <script-binding/>
                 </options>
             </control>
             <control>
-                <group>[Channel4]</group>
-                <key>cue_default</key>
-                <description>MIDI Learned from 20 messages.</description>
+                <group>[Channel1]</group>
+                <key>NL2.syncEnable</key>
                 <status>0x90</status>
-                <midino>0x11</midino>
-                <options>
-                    <normal/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel4]</group>
-                <key>NL2.padPress</key>
-                <status>0x90</status>
-                <midino>0x3A</midino>
+                <midino>0x16</midino>
                 <options>
                     <script-binding/>
                 </options>
@@ -502,26 +537,35 @@
                 <group>[Channel2]</group>
                 <key>NL2.padPress</key>
                 <status>0x90</status>
-                <midino>0x43</midino>
+                <midino>0x44</midino>
                 <options>
                     <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>cue_default</key>
+                <key>NL2.cueButton</key>
                 <description>MIDI Learned from 10 messages.</description>
                 <status>0x90</status>
                 <midino>0x0B</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
-                <group>[Channel1]</group>
-                <key>NL2.padPress</key>
+                <group>[Master]</group>
+                <key>NL2.setCrossfader</key>
                 <status>0x90</status>
-                <midino>0x48</midino>
+                <midino>0x55</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>NL2.syncEnable</key>
+                <status>0x90</status>
+                <midino>0x18</midino>
                 <options>
                     <script-binding/>
                 </options>
@@ -530,25 +574,26 @@
                 <group>[Channel3]</group>
                 <key>NL2.padPress</key>
                 <status>0x90</status>
-                <midino>0x2C</midino>
+                <midino>0x34</midino>
                 <options>
                     <script-binding/>
                 </options>
             </control>
             <control>
-                <group>[Channel4]</group>
+                <group>[Channel2]</group>
+                <key>NL2.cueButton</key>
+                <description>MIDI Learned from 16 messages.</description>
+                <status>0x90</status>
+                <midino>0x0D</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
                 <key>NL2.padPress</key>
                 <status>0x90</status>
-                <midino>0x30</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[Master]</group>
-                <key>NL2.setModeChan</key>
-                <status>0xB0</status>
-                <midino>0x6C</midino>
+                <midino>0x4E</midino>
                 <options>
                     <script-binding/>
                 </options>
