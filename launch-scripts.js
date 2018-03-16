@@ -80,13 +80,24 @@ NL2.page0Hold=[
 NL2.loopSizes=['0.03125','0.0625','0.125','0.25','0.5','1','2','4','8','16','32','64'];
 NL2.beatJumpSizes=[-0.25,-0.5,-1,-2,0.25,0.5,1,2];
 NL2.hotCueColors=[5,13,45,17,87,49,37,81];
+NL2.timer=null;
+NL2.timerCount=0;
 
 NL2.init=function() {
   NL2.connectControls();
+  NL2.timer=engine.beginTimer(20,NL2.actionTimer);
 }
 
 NL2.shutdown=function() {
   midi.sendSysexMsg(NL2.lightsOff,NL2.lightsOff.length);
+  if (NL2.timer) {
+    engine.stopTimer(NL2.timer);
+  }
+}
+
+NL2.actionTimer=function() {
+  print("I do the timer");
+  NL2.timerCount++;
 }
 
 NL2.connectControls=function() {
