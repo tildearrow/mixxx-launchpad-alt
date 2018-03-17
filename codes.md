@@ -14,22 +14,22 @@ SLIP | SYNC
 
 0: up, 1: down, 2: left, 3: right
 
-00 the six buttons under the spinny and effect buttons PART.
+00 the six buttons under the spinny and effect buttons DONE but no effect lights.
 01 scratch simulator
-02 speed up and reverse
+02 speed up and reverse DONE.
 03 key change
 10 hot cue DONE.
 11 roll/beat loop DONE.
 12 beat jump DONE (lights missing).
 13 slicer
-20 tempo/volume control
-21 tempo/volume nudge
-22 filter controls
+20 tempo/volume control DONE.
+21 tempo/volume nudge PART.
+22 filter controls DONE.
 23 equalizer cut
-30 sampler set 1
-31 sampler set 2
-32 sampler volume change (set 1)
-33 sampler volume change (set 2)
+30 sampler set 1 DONE.
+31 sampler set 2 DONE.
+32 sampler volume change (set 1) DONE.
+33 sampler volume change (set 2) DONE.
 
 play a modified song of storms (right down up right down up) for attract mode.
 
@@ -73,7 +73,7 @@ filter - | filter -fast | lo | none
 
 ## mode 23
 cut low | cut mid | cut high | tempo reset
-        | vol 1/4 | vol half | vol reset
+vol 1/4 | vol 1/2 | vol  3/4 | vol reset
 
 ## mode 30
 1 | 2 | 3 | 4

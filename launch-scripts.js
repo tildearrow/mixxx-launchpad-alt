@@ -82,6 +82,10 @@ NL2.beatJumpSizes=[-0.25,-0.5,-1,-2,0.25,0.5,1,2];
 NL2.hotCueColors=[5,13,45,17,87,49,37,81];
 NL2.timer=null;
 NL2.timerCount=0;
+NL2.tempoControl=[0,0,0,0];
+NL2.volControl=[0,0,0,0];
+NL2.filtControl=[0,0,0,0];
+NL2.sVolControl=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
 NL2.init=function() {
   NL2.connectControls();
@@ -96,7 +100,23 @@ NL2.shutdown=function() {
 }
 
 NL2.actionTimer=function() {
-  print("I do the timer");
+  //engine.setValue("[Channel1]","mute",((NL2.timerCount&15)>7));
+  for (var i=0; i<4; i++) {
+    if (NL2.tempoControl[i]!=0) {
+      engine.setValue("[Channel"+(i+1)+"]","rate",engine.getValue("[Channel"+(i+1)+"]","rate")+NL2.tempoControl[i]);
+    }
+    if (NL2.volControl[i]!=0) {
+      engine.setParameter("[Channel"+(i+1)+"]","volume",engine.getParameter("[Channel"+(i+1)+"]","volume")+NL2.volControl[i]);
+    }
+    if (NL2.filtControl[i]!=0) {
+      engine.setParameter("[QuickEffectRack1_[Channel"+(i+1)+"]]","super1",engine.getParameter("[QuickEffectRack1_[Channel"+(i+1)+"]]","super1")+NL2.filtControl[i]);
+    }
+  }
+  for (var i=0; i<16; i++) {
+    if (NL2.sVolControl[i]!=0) {
+      engine.setParameter("[Sampler"+(i+1)+"]","pregain",engine.getParameter("[Sampler"+(i+1)+"]","pregain")+NL2.sVolControl[i]);
+    }
+  }
   NL2.timerCount++;
 }
 
@@ -182,10 +202,12 @@ NL2.padConns=function(channel) {
       for (i=0; i<8; i++) {
         midi.sendShortMsg(0x90,NL2.padLights[channel][i],(engine.getValue("[Sampler"+(i+1)+"]","track_loaded")==true)?112:0);
       }
+      break;
     case 13:
       for (i=0; i<8; i++) {
         midi.sendShortMsg(0x90,NL2.padLights[channel][i],(engine.getValue("[Sampler"+(i+9)+"]","track_loaded")==true)?112:0);
       }
+      break;
   }
 }
 
@@ -332,12 +354,46 @@ NL2.padPress=function(group,control,value,asdf,agroup) {
   switch (NL2.modes[NL2.chan[agroup]]) {
     case 0:
       // to be fixed for some buttons
-      if (NL2.page0Hold[NL2.padCMap[control]]) {
-        if (value) {
-          engine.setValue(agroup,NL2.page0Controls[NL2.padCMap[control]],!engine.getValue(agroup,NL2.page0Controls[NL2.padCMap[control]]));
+      if (NL2.padCMap[control]&3!=3) {
+        if (NL2.page0Hold[NL2.padCMap[control]]) {
+          if (value) {
+            engine.setValue(agroup,NL2.page0Controls[NL2.padCMap[control]],!engine.getValue(agroup,NL2.page0Controls[NL2.padCMap[control]]));
+          }
+        } else {
+          engine.setValue(agroup,NL2.page0Controls[NL2.padCMap[control]],value?1:0);
         }
       } else {
-        engine.setValue(agroup,NL2.page0Controls[NL2.padCMap[control]],value?1:0);
+        if (value) {
+          engine.setValue("[EffectRack1_EffectUnit"+(1+(NL2.padCMap[control]==7?1:0))+"]","group_"+agroup+"_enable",!engine.getValue("[EffectRack1_EffectUnit"+(1+(NL2.padCMap[control]==7?1:0))+"]","group_"+agroup+"_enable"));
+        }
+      }
+      break;
+    case 2:
+      switch (NL2.padCMap[control]) {
+        case 0:
+          engine.setValue(agroup,"back",value?1:0);
+          break;
+        case 1:
+          engine.setValue(agroup,"fwd",value?1:0);
+          break;
+        case 2:
+          engine.setValue(agroup,"reverse",value?1:0);
+          break;
+        case 3:
+          engine.setValue(agroup,"reverseroll",value?1:0);
+          break;
+        case 4:
+          engine.setValue(agroup,"play",!engine.getValue(agroup,"play"));
+          break;
+        case 5:
+          engine.setValue(agroup,"orientation",0);
+          break;
+        case 6:
+          engine.setValue(agroup,"orientation",1);
+          break;
+        case 7:
+          engine.setValue(agroup,"orientation",2);
+          break;
       }
       break;
     case 4:
@@ -355,6 +411,114 @@ NL2.padPress=function(group,control,value,asdf,agroup) {
         engine.setValue(agroup,"beatjump",NL2.beatJumpSizes[NL2.padCMap[control]]);
       }
       break;
+    case 2:
+      switch (NL2.padCMap[control]) {
+        case 0:
+          engine.setValue(agroup,"back",value?1:0);
+          break;
+        case 1:
+          engine.setValue(agroup,"fwd",value?1:0);
+          break;
+        case 2:
+          engine.setValue(agroup,"reverse",value?1:0);
+          break;
+        case 3:
+          engine.setValue(agroup,"reverseroll",value?1:0);
+          break;
+        case 4:
+          engine.setValue(agroup,"play",!engine.getValue(agroup,"play"));
+          break;
+        case 5:
+          engine.setValue(agroup,"orientation",0);
+          break;
+        case 6:
+          engine.setValue(agroup,"orientation",1);
+          break;
+        case 7:
+          engine.setValue(agroup,"orientation",2);
+          break;
+      }
+      break;
+    case 8:
+      if (value) {
+        switch (NL2.padCMap[control]) {
+          case 0:
+            NL2.tempoControl[NL2.chan[agroup]]=0.005;
+            break;
+          case 1:
+            NL2.volControl[NL2.chan[agroup]]=0.01;
+            break;
+          case 2:
+            NL2.tempoControl[NL2.chan[agroup]]=0.04;
+            break;
+          case 3:
+            NL2.volControl[NL2.chan[agroup]]=0.05;
+            break;
+          case 4:
+            NL2.tempoControl[NL2.chan[agroup]]=-0.005;
+            break;
+          case 5:
+            NL2.volControl[NL2.chan[agroup]]=-0.01;
+            break;
+          case 6:
+            NL2.tempoControl[NL2.chan[agroup]]=-0.04;
+            break;
+          case 7:
+            NL2.volControl[NL2.chan[agroup]]=-0.05;
+            break;
+        }
+      } else {
+        switch (NL2.padCMap[control]) {
+          case 0: case 2: case 4: case 6:
+            NL2.tempoControl[NL2.chan[agroup]]=0;
+            break;
+          case 1: case 3: case 5: case 7:
+            NL2.volControl[NL2.chan[agroup]]=0;
+            break;
+        }
+      }
+      break;
+    case 9:
+      switch (NL2.padCMap[control]) {
+        case 0:
+          engine.setValue(agroup,"rate_temp_up_small",value);
+          break;
+        case 1:
+          engine.setValue(agroup,"rate_temp_up",value);
+          break;
+        case 4:
+          engine.setValue(agroup,"rate_temp_down_small",value);
+          break;
+        case 5:
+          engine.setValue(agroup,"rate_temp_down",value);
+          break;
+      }
+      break;
+    case 10:
+      switch (NL2.padCMap[control]) {
+        case 0:
+          NL2.filtControl[NL2.chan[agroup]]=value?0.005:0;
+          break;
+        case 1:
+          NL2.filtControl[NL2.chan[agroup]]=value?0.02:0;
+          break;
+        case 2:
+          engine.setParameter("[QuickEffectRack1_"+agroup+"]","super1",1);
+          break;
+        case 3:
+          engine.setParameter("[QuickEffectRack1_"+agroup+"]","super1",0.5);
+          break;
+        case 4:
+          NL2.filtControl[NL2.chan[agroup]]=value?-0.005:0;
+          break;
+        case 5:
+          NL2.filtControl[NL2.chan[agroup]]=value?-0.02:0;
+          break;
+        case 6:
+          engine.setParameter("[QuickEffectRack1_"+agroup+"]","super1",0);
+          break;
+      }
+      break;
     case 12:
       if (NL2.shift) {
         engine.setValue("[Sampler"+(NL2.padCMap[control]+1)+"]","start_stop",value?1:0);
@@ -367,6 +531,28 @@ NL2.padPress=function(group,control,value,asdf,agroup) {
         engine.setValue("[Sampler"+(NL2.padCMap[control]+9)+"]","start_stop",value?1:0);
       } else {
         engine.setValue("[Sampler"+(NL2.padCMap[control]+9)+"]","start_play",value?1:0);
+      }
+      break;
+    case 14:
+      if (value) {
+        if (NL2.shift) {
+          NL2.sVolControl[NL2.padCMap[control]]=0.02;
+        } else {
+          NL2.sVolControl[NL2.padCMap[control]]=-0.04;
+        }
+      } else {
+        NL2.sVolControl[NL2.padCMap[control]]=0;
+      }
+      break;
+    case 15:
+      if (value) {
+        if (NL2.shift) {
+          NL2.sVolControl[NL2.padCMap[control]+8]=0.02;
+        } else {
+          NL2.sVolControl[NL2.padCMap[control]+8]=-0.04;
+        }
+      } else {
+        NL2.sVolControl[NL2.padCMap[control]+8]=0;
       }
       break;
   }
