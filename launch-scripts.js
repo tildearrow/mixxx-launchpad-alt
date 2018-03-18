@@ -100,7 +100,6 @@ NL2.shutdown=function() {
 }
 
 NL2.actionTimer=function() {
-  //engine.setValue("[Channel1]","mute",((NL2.timerCount&15)>7));
   for (var i=0; i<4; i++) {
     if (NL2.tempoControl[i]!=0) {
       engine.setValue("[Channel"+(i+1)+"]","rate",engine.getValue("[Channel"+(i+1)+"]","rate")+NL2.tempoControl[i]);
@@ -114,7 +113,7 @@ NL2.actionTimer=function() {
   }
   for (var i=0; i<16; i++) {
     if (NL2.sVolControl[i]!=0) {
-      engine.setParameter("[Sampler"+(i+1)+"]","pregain",engine.getParameter("[Sampler"+(i+1)+"]","pregain")+NL2.sVolControl[i]);
+      engine.setParameter("[Sampler"+(i+1)+"]","volume",engine.getParameter("[Sampler"+(i+1)+"]","volume")+NL2.sVolControl[i]);
     }
   }
   NL2.timerCount++;
@@ -234,35 +233,71 @@ NL2.lightPadHotCue=function(value,group,control) {
 NL2.lightPadRoll=function(value,group,control) {
   for (var i=0; i<8; i++) {
     if (control==='beatloop_'+NL2.loopSizes[i+1]+'_enabled') {
-      midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][i],value?25:0);
+      if (value) {
+        midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][i],25);
+      } else {
+        midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][i],0x00,0x03,0x01,0xf7],12);
+      }
       break;
     }
   }
 }
 
 NL2.lightGeneric0=function(value,group,control) {
-  midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][0],value?80:0);
+  if (value) {
+    midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][0],80);
+  } else {
+    midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][0],0x03,0x02,0x06,0xf7],12);
+  }
 }
 NL2.lightGeneric1=function(value,group,control) {
-  midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][1],value?80:0);
+  if (value) {
+    midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][1],80);
+  } else {
+    midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][1],0x03,0x02,0x06,0xf7],12);
+  }
 }
 NL2.lightGeneric2=function(value,group,control) {
-  midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][2],value?80:0);
+  if (value) {
+    midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][2],80);
+  } else {
+    midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][2],0x03,0x02,0x06,0xf7],12);
+  }
 }
 NL2.lightGeneric3=function(value,group,control) {
-  midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][3],value?80:0);
+  if (value) {
+    midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][3],80);
+  } else {
+    midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][3],0x03,0x02,0x06,0xf7],12);
+  }
 }
 NL2.lightGeneric4=function(value,group,control) {
-  midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][4],value?80:0);
+  if (value) {
+    midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][4],80);
+  } else {
+    midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][4],0x03,0x02,0x06,0xf7],12);
+  }
 }
 NL2.lightGeneric5=function(value,group,control) {
-  midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][5],value?80:0);
+  if (value) {
+    midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][5],80);
+  } else {
+    midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][5],0x03,0x02,0x06,0xf7],12);
+  }
 }
 NL2.lightGeneric6=function(value,group,control) {
-  midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][6],value?80:0);
+  if (value) {
+    midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][6],80);
+  } else {
+    midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][6],0x03,0x02,0x06,0xf7],12);
+  }
 }
 NL2.lightGeneric7=function(value,group,control) {
-  midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][7],value?80:0);
+  if (value) {
+    midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][7],80);
+  } else {
+    midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][7],0x03,0x02,0x06,0xf7],12);
+  }
 }
 
 NL2.lightSample=function(value,group,control) {
@@ -354,7 +389,7 @@ NL2.padPress=function(group,control,value,asdf,agroup) {
   switch (NL2.modes[NL2.chan[agroup]]) {
     case 0:
       // to be fixed for some buttons
-      if (NL2.padCMap[control]&3!=3) {
+      if ((NL2.padCMap[control]&3)!=3) {
         if (NL2.page0Hold[NL2.padCMap[control]]) {
           if (value) {
             engine.setValue(agroup,NL2.page0Controls[NL2.padCMap[control]],!engine.getValue(agroup,NL2.page0Controls[NL2.padCMap[control]]));
