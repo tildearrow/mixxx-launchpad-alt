@@ -25,7 +25,7 @@ SLIP | SYNC
 20 tempo/volume control DONE.
 21 tempo/volume nudge PART.
 22 filter controls DONE.
-23 equalizer cut
+23 equalizer cut DONE no lights.
 30 sampler set 1 DONE.
 31 sampler set 2 DONE.
 32 sampler volume change (set 1) DONE.

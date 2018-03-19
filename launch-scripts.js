@@ -139,12 +139,16 @@ NL2.connectControls=function() {
     conn.trigger();
     conn=engine.makeConnection("[Sampler"+(i+1)+"]","track_loaded",NL2.lightInsSample);
     conn.trigger();
+    conn=engine.makeConnection("[Sampler"+(i+1)+"]","volume",NL2.lightSampleVol);
+    conn.trigger();
   }
   
   for (i=0; i<8; i++) {
     conn=engine.makeConnection("[Sampler"+(i+9)+"]","play",NL2.lightSample2);
     conn.trigger();
     conn=engine.makeConnection("[Sampler"+(i+9)+"]","track_loaded",NL2.lightInsSample2);
+    conn.trigger();
+    conn=engine.makeConnection("[Sampler"+(i+9)+"]","volume",NL2.lightSampleVol2);
     conn.trigger();
   }
   
@@ -158,7 +162,20 @@ NL2.connectControls=function() {
   NL2.lightModeChan();
 }
 
+NL2.volRed=function(val) {
+  return Math.min(1,val*2)*63;
+}
+
+NL2.volGreen=function(val) {
+  return Math.min(1,Math.max(0,1.5-val))*(63*Math.min(1,(val*6)+0.0625));
+}
+
+NL2.volBlue=function(val) {
+  return 0;
+}
+
 NL2.padConns=function(channel) {
+  var pvalue;
   for (i=0; i<8; i++) {
     midi.sendShortMsg(0x90,NL2.padLights[channel][i],0);
     if (NL2.modeConns[channel][i]!=null) {
@@ -197,6 +214,11 @@ NL2.padConns=function(channel) {
         NL2.modeConns[channel][i].trigger();
       }
       break;
+    case 6:
+      for (i=0; i<8; i++) {
+        midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[channel][i],0x03,0x01,0x00,0xf7],12);
+      }
+      break;
     case 12:
       for (i=0; i<8; i++) {
         midi.sendShortMsg(0x90,NL2.padLights[channel][i],(engine.getValue("[Sampler"+(i+1)+"]","track_loaded")==true)?112:0);
@@ -205,6 +227,18 @@ NL2.padConns=function(channel) {
     case 13:
       for (i=0; i<8; i++) {
         midi.sendShortMsg(0x90,NL2.padLights[channel][i],(engine.getValue("[Sampler"+(i+9)+"]","track_loaded")==true)?112:0);
+      }
+      break;
+    case 14:
+      for (i=0; i<8; i++) {
+        pvalue=engine.getValue("[Sampler"+(i+1)+"]","volume");
+        midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[channel][i],NL2.volRed(pvalue),NL2.volGreen(pvalue),NL2.volBlue(pvalue),0xf7],12);
+      }
+      break;
+    case 15:
+      for (i=0; i<8; i++) {
+        pvalue=engine.getValue("[Sampler"+(i+9)+"]","volume");
+        midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[channel][i],NL2.volRed(pvalue),NL2.volGreen(pvalue),NL2.volBlue(pvalue),0xf7],12);
       }
       break;
   }
@@ -227,7 +261,11 @@ NL2.lightSyncBeat=function(value,group,control) {
 }
 
 NL2.lightPadHotCue=function(value,group,control) {
-  midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][NL2.hotCueCtrls[control]],value?(NL2.hotCueColors[NL2.hotCueCtrls[control]]):0);
+  if (value) {
+    midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][NL2.hotCueCtrls[control]],(NL2.hotCueColors[NL2.hotCueCtrls[control]]));
+  } else {
+    midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][NL2.hotCueCtrls[control]],0x02,0x02,0x02,0xf7],12);
+  }
 }
 
 NL2.lightPadRoll=function(value,group,control) {
@@ -308,10 +346,26 @@ NL2.lightSample=function(value,group,control) {
   }
 }
 
+NL2.lightSampleVol=function(value,group,control) {
+  for (var i=0; i<4; i++) {
+    if (NL2.modes[i]==14) {
+      midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[i][NL2.sample[group]],NL2.volRed(value),NL2.volGreen(value),NL2.volBlue(value),0xf7],12);
+    }
+  }
+}
+
 NL2.lightSample2=function(value,group,control) {
   for (var i=0; i<4; i++) {
     if (NL2.modes[i]==13) {
       midi.sendShortMsg(0x90,NL2.padLights[i][NL2.sample[group]],value?(5+(Math.floor(Math.random()*7)*8)):112);
+    }
+  }
+}
+
+NL2.lightSampleVol2=function(value,group,control) {
+  for (var i=0; i<4; i++) {
+    if (NL2.modes[i]==15) {
+      midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[i][NL2.sample[group]],NL2.volRed(value),NL2.volGreen(value),NL2.volBlue(value),0xf7],12);
     }
   }
 }
@@ -444,6 +498,9 @@ NL2.padPress=function(group,control,value,asdf,agroup) {
     case 6:
       if (value) {
         engine.setValue(agroup,"beatjump",NL2.beatJumpSizes[NL2.padCMap[control]]);
+        midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[agroup]][NL2.padCMap[control]],9);
+      } else {
+        midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[agroup]][NL2.padCMap[control]],0x03,0x01,0x00,0xf7],12);
       }
       break;
     case 2:
@@ -476,31 +533,39 @@ NL2.padPress=function(group,control,value,asdf,agroup) {
       break;
     case 8:
       if (value) {
-        switch (NL2.padCMap[control]) {
-          case 0:
-            NL2.tempoControl[NL2.chan[agroup]]=0.005;
-            break;
-          case 1:
-            NL2.volControl[NL2.chan[agroup]]=0.01;
-            break;
-          case 2:
-            NL2.tempoControl[NL2.chan[agroup]]=0.04;
-            break;
-          case 3:
-            NL2.volControl[NL2.chan[agroup]]=0.05;
-            break;
-          case 4:
-            NL2.tempoControl[NL2.chan[agroup]]=-0.005;
-            break;
-          case 5:
-            NL2.volControl[NL2.chan[agroup]]=-0.01;
-            break;
-          case 6:
-            NL2.tempoControl[NL2.chan[agroup]]=-0.04;
-            break;
-          case 7:
-            NL2.volControl[NL2.chan[agroup]]=-0.05;
-            break;
+        if (NL2.shift) {
+          switch (NL2.padCMap[control]) {
+            case 0: case 2: case 4: case 6:
+              engine.setValue(agroup,"rate",0);
+              break;
+          }
+        } else {
+          switch (NL2.padCMap[control]) {
+            case 0:
+              NL2.tempoControl[NL2.chan[agroup]]=0.005;
+              break;
+            case 1:
+              NL2.volControl[NL2.chan[agroup]]=0.01;
+              break;
+            case 2:
+              NL2.tempoControl[NL2.chan[agroup]]=0.04;
+              break;
+            case 3:
+              NL2.volControl[NL2.chan[agroup]]=0.05;
+              break;
+            case 4:
+              NL2.tempoControl[NL2.chan[agroup]]=-0.005;
+              break;
+            case 5:
+              NL2.volControl[NL2.chan[agroup]]=-0.01;
+              break;
+            case 6:
+              NL2.tempoControl[NL2.chan[agroup]]=-0.04;
+              break;
+            case 7:
+              NL2.volControl[NL2.chan[agroup]]=-0.05;
+              break;
+          }
         }
       } else {
         switch (NL2.padCMap[control]) {
@@ -551,6 +616,50 @@ NL2.padPress=function(group,control,value,asdf,agroup) {
           break;
         case 6:
           engine.setParameter("[QuickEffectRack1_"+agroup+"]","super1",0);
+          break;
+      }
+      break;
+    case 11:
+      switch (NL2.padCMap[control]) {
+        case 0:
+          if (value) {
+            engine.setValue(agroup,"filterLowKill",!engine.getValue(agroup,"filterLowKill"));
+          }
+          break;
+        case 1:
+          if (value) {
+            engine.setValue(agroup,"filterMidKill",!engine.getValue(agroup,"filterMidKill"));
+          }
+          break;
+        case 2:
+          if (value) {
+            engine.setValue(agroup,"filterHighKill",!engine.getValue(agroup,"filterHighKill"));
+          }
+          break;
+        case 3:
+          if (value) {
+            engine.setValue(agroup,"rate",0);
+          }
+          break;
+        case 4:
+          if (value) {
+            engine.setParameter(agroup,"volume",0.25);
+          }
+          break;
+        case 5:
+          if (value) {
+            engine.setParameter(agroup,"volume",0.5);
+          }
+          break;
+        case 6:
+          if (value) {
+            engine.setParameter(agroup,"volume",0.75);
+          }
+          break;
+        case 7:
+          if (value) {
+            engine.setParameter(agroup,"volume",1);
+          }
           break;
       }
       break;
