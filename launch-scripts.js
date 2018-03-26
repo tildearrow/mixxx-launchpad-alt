@@ -12,14 +12,14 @@ NL2.sample={
   "[Sampler2]": 1,
   "[Sampler3]": 2,
   "[Sampler4]": 3,
-  "[Sampler5]": 4,
-  "[Sampler6]": 5,
-  "[Sampler7]": 6,
-  "[Sampler8]": 7,
-  "[Sampler9]": 0,
-  "[Sampler10]": 1,
-  "[Sampler11]": 2,
-  "[Sampler12]": 3,
+  "[Sampler5]": 0,
+  "[Sampler6]": 1,
+  "[Sampler7]": 2,
+  "[Sampler8]": 3,
+  "[Sampler9]": 4,
+  "[Sampler10]": 5,
+  "[Sampler11]": 6,
+  "[Sampler12]": 7,
   "[Sampler13]": 4,
   "[Sampler14]": 5,
   "[Sampler15]": 6,
@@ -44,6 +44,16 @@ NL2.padCMap={
   42: 5, 62: 5, 46: 5, 66: 5,
   43: 6, 63: 6, 47: 6, 67: 6,
   44: 7, 64: 7, 48: 7, 68: 7
+};
+NL2.padSCMap={
+  51: 0, 71: 0, 55: 0, 75: 0,
+  52: 1, 72: 1, 56: 1, 76: 1,
+  53: 2, 73: 2, 57: 2, 77: 2,
+  54: 3, 74: 3, 58: 3, 78: 3,
+  41: 8, 61: 8, 45: 8, 65: 8,
+  42: 9, 62: 9, 46: 9, 66: 9,
+  43: 10, 63: 10, 47: 10, 67: 10,
+  44: 11, 64: 11, 48: 11, 68: 11
 };
 NL2.crossValues=[-1,-0.67,-0.33,0,0.33,0.67,1];
 NL2.shift=false;
@@ -134,7 +144,8 @@ NL2.connectControls=function() {
   }
   
   // sample conns
-  for (i=0; i<8; i++) {
+  for (i=0; i<12; i++) {
+    if (i==4) i+=4;
     conn=engine.makeConnection("[Sampler"+(i+1)+"]","play",NL2.lightSample);
     conn.trigger();
     conn=engine.makeConnection("[Sampler"+(i+1)+"]","track_loaded",NL2.lightInsSample);
@@ -143,12 +154,13 @@ NL2.connectControls=function() {
     conn.trigger();
   }
   
-  for (i=0; i<8; i++) {
-    conn=engine.makeConnection("[Sampler"+(i+9)+"]","play",NL2.lightSample2);
+  for (i=4; i<16; i++) {
+    if (i==8) i+=4;
+    conn=engine.makeConnection("[Sampler"+(i+1)+"]","play",NL2.lightSample2);
     conn.trigger();
-    conn=engine.makeConnection("[Sampler"+(i+9)+"]","track_loaded",NL2.lightInsSample2);
+    conn=engine.makeConnection("[Sampler"+(i+1)+"]","track_loaded",NL2.lightInsSample2);
     conn.trigger();
-    conn=engine.makeConnection("[Sampler"+(i+9)+"]","volume",NL2.lightSampleVol2);
+    conn=engine.makeConnection("[Sampler"+(i+1)+"]","volume",NL2.lightSampleVol2);
     conn.trigger();
   }
   
@@ -665,38 +677,38 @@ NL2.padPress=function(group,control,value,asdf,agroup) {
       break;
     case 12:
       if (NL2.shift) {
-        engine.setValue("[Sampler"+(NL2.padCMap[control]+1)+"]","start_stop",value?1:0);
+        engine.setValue("[Sampler"+(NL2.padSCMap[control]+1)+"]","start_stop",value?1:0);
       } else {
-        engine.setValue("[Sampler"+(NL2.padCMap[control]+1)+"]","start_play",value?1:0);
+        engine.setValue("[Sampler"+(NL2.padSCMap[control]+1)+"]","start_play",value?1:0);
       }
       break;
     case 13:
       if (NL2.shift) {
-        engine.setValue("[Sampler"+(NL2.padCMap[control]+9)+"]","start_stop",value?1:0);
+        engine.setValue("[Sampler"+(NL2.padSCMap[control]+5)+"]","start_stop",value?1:0);
       } else {
-        engine.setValue("[Sampler"+(NL2.padCMap[control]+9)+"]","start_play",value?1:0);
+        engine.setValue("[Sampler"+(NL2.padSCMap[control]+5)+"]","start_play",value?1:0);
       }
       break;
     case 14:
       if (value) {
         if (NL2.shift) {
-          NL2.sVolControl[NL2.padCMap[control]]=0.02;
+          NL2.sVolControl[NL2.padSCMap[control]]=0.02;
         } else {
-          NL2.sVolControl[NL2.padCMap[control]]=-0.04;
+          NL2.sVolControl[NL2.padSCMap[control]]=-0.04;
         }
       } else {
-        NL2.sVolControl[NL2.padCMap[control]]=0;
+        NL2.sVolControl[NL2.padSCMap[control]]=0;
       }
       break;
     case 15:
       if (value) {
         if (NL2.shift) {
-          NL2.sVolControl[NL2.padCMap[control]+8]=0.02;
+          NL2.sVolControl[NL2.padSCMap[control]+4]=0.02;
         } else {
-          NL2.sVolControl[NL2.padCMap[control]+8]=-0.04;
+          NL2.sVolControl[NL2.padSCMap[control]+4]=-0.04;
         }
       } else {
-        NL2.sVolControl[NL2.padCMap[control]+8]=0;
+        NL2.sVolControl[NL2.padSCMap[control]+4]=0;
       }
       break;
   }
