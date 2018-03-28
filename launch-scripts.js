@@ -35,6 +35,16 @@ NL2.hotCueCtrls={
   "hotcue_7_enabled": 6,
   "hotcue_8_enabled": 7
 };
+NL2.effectOffsets={
+  "[EffectRack1_EffectUnit1]": 3,
+  "[EffectRack1_EffectUnit2]": 7
+};
+NL2.effectChannels={
+  "group_[Channel1]_enable": 0,
+  "group_[Channel2]_enable": 1,
+  "group_[Channel3]_enable": 2,
+  "group_[Channel4]_enable": 3
+};
 NL2.padCMap={
   51: 0, 71: 0, 55: 0, 75: 0,
   52: 1, 72: 1, 56: 1, 76: 1,
@@ -96,8 +106,15 @@ NL2.tempoControl=[0,0,0,0];
 NL2.volControl=[0,0,0,0];
 NL2.filtControl=[0,0,0,0];
 NL2.sVolControl=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+NL2.curSavedMode=0;
+NL2.savedModes=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
 
 NL2.init=function() {
+  // resonance
+  engine.setValue("[QuickEffectRack1_[Channel1]_Effect1]","parameter2",4);
+  engine.setValue("[QuickEffectRack1_[Channel2]_Effect1]","parameter2",4);
+  engine.setValue("[QuickEffectRack1_[Channel3]_Effect1]","parameter2",4);
+  engine.setValue("[QuickEffectRack1_[Channel4]_Effect1]","parameter2",4);
   NL2.connectControls();
   NL2.timer=engine.beginTimer(20,NL2.actionTimer);
 }
@@ -132,7 +149,7 @@ NL2.actionTimer=function() {
 NL2.connectControls=function() {
   var conn;
   // per-deck conns
-  for (i=0; i<4; i++) {
+  for (var i=0; i<4; i++) {
     conn=engine.makeConnection("[Channel"+(i+1)+"]","play_indicator",NL2.lightPlay);
     conn.trigger();
     conn=engine.makeConnection("[Channel"+(i+1)+"]","cue_indicator",NL2.lightCue);
@@ -144,7 +161,7 @@ NL2.connectControls=function() {
   }
   
   // sample conns
-  for (i=0; i<12; i++) {
+  for (var i=0; i<12; i++) {
     if (i==4) i+=4;
     conn=engine.makeConnection("[Sampler"+(i+1)+"]","play",NL2.lightSample);
     conn.trigger();
@@ -154,7 +171,7 @@ NL2.connectControls=function() {
     conn.trigger();
   }
   
-  for (i=4; i<16; i++) {
+  for (var i=4; i<16; i++) {
     if (i==8) i+=4;
     conn=engine.makeConnection("[Sampler"+(i+1)+"]","play",NL2.lightSample2);
     conn.trigger();
@@ -164,7 +181,7 @@ NL2.connectControls=function() {
     conn.trigger();
   }
   
-  for (i=0; i<4; i++) {
+  for (var i=0; i<4; i++) {
     NL2.padConns(i);
   }
   
@@ -172,6 +189,7 @@ NL2.connectControls=function() {
   conn.trigger();
   
   NL2.lightModeChan();
+  NL2.lightSavedMode();
 }
 
 NL2.volRed=function(val) {
@@ -188,7 +206,7 @@ NL2.volBlue=function(val) {
 
 NL2.padConns=function(channel) {
   var pvalue;
-  for (i=0; i<8; i++) {
+  for (var i=0; i<8; i++) {
     midi.sendShortMsg(0x90,NL2.padLights[channel][i],0);
     if (NL2.modeConns[channel][i]!=null) {
       NL2.modeConns[channel][i].disconnect();
@@ -203,52 +221,52 @@ NL2.padConns=function(channel) {
       NL2.modeConns[channel][1].trigger();
       NL2.modeConns[channel][2]=engine.makeConnection("[Channel"+(channel+1)+"]","beats_translate_curpos",NL2.lightGeneric2);
       NL2.modeConns[channel][2].trigger();
-      //NL2.modeConns[channel][3]=engine.makeConnection("[EffectRack1_EffectUnit1]","group_[Channel"+(channel+1)+"]_enable",NL2.lightGeneric3);
-      //NL2.modeConns[channel][3].trigger();
+      NL2.modeConns[channel][3]=engine.makeConnection("[EffectRack1_EffectUnit1]","group_[Channel"+(channel+1)+"]_enable",NL2.lightEffect);
+      NL2.modeConns[channel][3].trigger();
       NL2.modeConns[channel][4]=engine.makeConnection("[Channel"+(channel+1)+"]","eject",NL2.lightGeneric4);
       NL2.modeConns[channel][4].trigger();
       NL2.modeConns[channel][5]=engine.makeConnection("[Channel"+(channel+1)+"]","quantize",NL2.lightGeneric5);
       NL2.modeConns[channel][5].trigger();
       NL2.modeConns[channel][6]=engine.makeConnection("[Channel"+(channel+1)+"]","keylock",NL2.lightGeneric6);
       NL2.modeConns[channel][6].trigger();
-      //NL2.modeConns[channel][7]=engine.makeConnection("[EffectRack1_EffectUnit2]","group_[Channel"+(channel+1)+"]_enable",NL2.lightGeneric7);
-      //NL2.modeConns[channel][7].trigger();
+      NL2.modeConns[channel][7]=engine.makeConnection("[EffectRack1_EffectUnit2]","group_[Channel"+(channel+1)+"]_enable",NL2.lightEffect);
+      NL2.modeConns[channel][7].trigger();
       break;
     case 4:
-      for (i=0; i<8; i++) {
+      for (var i=0; i<8; i++) {
         NL2.modeConns[channel][i]=engine.makeConnection("[Channel"+(channel+1)+"]","hotcue_"+(i+1)+"_enabled",NL2.lightPadHotCue);
         NL2.modeConns[channel][i].trigger();
       }
       break;
     case 5:
-      for (i=0; i<8; i++) {
+      for (var i=0; i<8; i++) {
         NL2.modeConns[channel][i]=engine.makeConnection("[Channel"+(channel+1)+"]","beatloop_"+(NL2.loopSizes[i+1])+"_enabled",NL2.lightPadRoll);
         NL2.modeConns[channel][i].trigger();
       }
       break;
     case 6:
-      for (i=0; i<8; i++) {
+      for (var i=0; i<8; i++) {
         midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[channel][i],0x03,0x01,0x00,0xf7],12);
       }
       break;
     case 12:
-      for (i=0; i<8; i++) {
+      for (var i=0; i<8; i++) {
         midi.sendShortMsg(0x90,NL2.padLights[channel][i],(engine.getValue("[Sampler"+(i+1)+"]","track_loaded")==true)?112:0);
       }
       break;
     case 13:
-      for (i=0; i<8; i++) {
+      for (var i=0; i<8; i++) {
         midi.sendShortMsg(0x90,NL2.padLights[channel][i],(engine.getValue("[Sampler"+(i+9)+"]","track_loaded")==true)?112:0);
       }
       break;
     case 14:
-      for (i=0; i<8; i++) {
+      for (var i=0; i<8; i++) {
         pvalue=engine.getValue("[Sampler"+(i+1)+"]","volume");
         midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[channel][i],NL2.volRed(pvalue),NL2.volGreen(pvalue),NL2.volBlue(pvalue),0xf7],12);
       }
       break;
     case 15:
-      for (i=0; i<8; i++) {
+      for (var i=0; i<8; i++) {
         pvalue=engine.getValue("[Sampler"+(i+9)+"]","volume");
         midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[channel][i],NL2.volRed(pvalue),NL2.volGreen(pvalue),NL2.volBlue(pvalue),0xf7],12);
       }
@@ -350,6 +368,14 @@ NL2.lightGeneric7=function(value,group,control) {
   }
 }
 
+NL2.lightEffect=function(value,group,control) {
+  if (value) {
+    midi.sendShortMsg(0x90,NL2.padLights[NL2.effectChannels[control]][NL2.effectOffsets[group]],53);
+  } else {
+    midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.effectChannels[control]][NL2.effectOffsets[group]],0x03,0x00,0x03,0xf7],12);
+  }
+}
+
 NL2.lightSample=function(value,group,control) {
   for (var i=0; i<4; i++) {
     if (NL2.modes[i]==12) {
@@ -405,7 +431,7 @@ NL2.lightCross=function(value,group,control) {
 }
 
 NL2.lightModeChan=function() {
-  for (i=0; i<4; i++) {
+  for (var i=0; i<4; i++) {
     midi.sendShortMsg(0xb0,0x6c+i,(NL2.modeChan==i)?6:0);
     
     // current mode light
@@ -418,6 +444,12 @@ NL2.lightModeChan=function() {
     } else {
       midi.sendShortMsg(0xb0,0x68+i,0);
     }
+  }
+}
+
+NL2.lightSavedMode=function() {
+  for (var i=0; i<4; i++) {
+    midi.sendShortMsg(0x90,0x59-(i*10),(NL2.curSavedMode==i)?6:0);
   }
 }
 
@@ -711,6 +743,30 @@ NL2.padPress=function(group,control,value,asdf,agroup) {
         NL2.sVolControl[NL2.padSCMap[control]+4]=0;
       }
       break;
+  }
+}
+
+NL2.loadModes=function(group,control,value) {
+  if (value) {
+    NL2.savedModes[NL2.curSavedMode][0]=NL2.modes[0];
+    NL2.savedModes[NL2.curSavedMode][1]=NL2.modes[1];
+    NL2.savedModes[NL2.curSavedMode][2]=NL2.modes[2];
+    NL2.savedModes[NL2.curSavedMode][3]=NL2.modes[3];
+    NL2.curSavedMode=Math.floor((0x59-control)/10);
+    if (NL2.curSavedMode>3) {
+      NL2.curSavedMode=0;
+    }
+    NL2.lightSavedMode();
+    NL2.modes[0]=NL2.savedModes[NL2.curSavedMode][0];
+    NL2.modes[1]=NL2.savedModes[NL2.curSavedMode][1];
+    NL2.modes[2]=NL2.savedModes[NL2.curSavedMode][2];
+    NL2.modes[3]=NL2.savedModes[NL2.curSavedMode][3];
+    for (var i=0; i<4; i++) {
+      NL2.padConns(i);
+    }
+    NL2.modeChan=0;
+    NL2.modePrompt=0;
+    NL2.lightModeChan(i);
   }
 }
 
