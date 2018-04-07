@@ -249,6 +249,12 @@ NL2.padConns=function(channel) {
         midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[channel][i],0x03,0x01,0x00,0xf7],12);
       }
       break;
+    case 8:
+      NL2.modeConns[channel][0]=engine.makeConnection("[Channel"+(channel+1)+"]","rate",NL2.lightRate);
+      NL2.modeConns[channel][0].trigger();
+      NL2.modeConns[channel][1]=engine.makeConnection("[Channel"+(channel+1)+"]","volume",NL2.lightVolume);
+      NL2.modeConns[channel][1].trigger();
+      break;
     case 12:
       for (var i=0; i<8; i++) {
         midi.sendShortMsg(0x90,NL2.padLights[channel][i],(engine.getValue("[Sampler"+(i+1)+"]","track_loaded")==true)?112:0);
@@ -341,9 +347,9 @@ NL2.lightGeneric3=function(value,group,control) {
 }
 NL2.lightGeneric4=function(value,group,control) {
   if (value) {
-    midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][4],80);
+    midi.sendShortMsg(0x90,NL2.padLights[NL2.chan[group]][4],9);
   } else {
-    midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][4],0x03,0x02,0x06,0xf7],12);
+    midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][4],0x06,0x00,0x00,0xf7],12);
   }
 }
 NL2.lightGeneric5=function(value,group,control) {
@@ -428,6 +434,20 @@ NL2.lightCross=function(value,group,control) {
   for (var i=0; i<7; i++) {
     midi.sendShortMsg(0x90,0x52+i,(Math.floor(3.49*(value+1))==i)?33:47);
   }
+}
+
+NL2.lightRate=function(value,group,control) {
+  midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][0],0x3f,Math.max(0,Math.min(0x3f,0x3f-(value*63))),0x00,0xf7],12);
+  midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][4],0x3f,Math.max(0,Math.min(0x3f,0x3f+(value*63))),0x00,0xf7],12);
+  midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][2],0x3f,Math.max(0,Math.min(0x3f,0x3f-(value*63))),0x00,0xf7],12);
+  midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][6],0x3f,Math.max(0,Math.min(0x3f,0x3f+(value*63))),0x00,0xf7],12);
+}
+
+NL2.lightVolume=function(value,group,control) {
+  midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][1],0,Math.max(0,Math.min(0x3f,(Math.pow(value,2)*63))),0x00,0xf7],12);
+  midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][5],0,Math.max(0,Math.min(0x3f,63-(Math.pow(value,2)*63))),0x00,0xf7],12);
+  midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][3],0,Math.max(0,Math.min(0x3f,(Math.pow(value,2)*63))),0x00,0xf7],12);
+  midi.sendSysexMsg([0xf0,0x00,0x20,0x29,0x02,0x18,0x0b,NL2.padLights[NL2.chan[group]][7],0,Math.max(0,Math.min(0x3f,63-(Math.pow(value,2)*63))),0x00,0xf7],12);
 }
 
 NL2.lightModeChan=function() {
